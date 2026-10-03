@@ -2,6 +2,27 @@
 
 Nx monorepo for public npm-distributed [Pi](https://pi.dev) packages.
 
+## kmasa fork: Git install
+
+The root Pi manifest loads **only fast-mode**, including `gpt-6.1-sol` support.
+Other extensions, skills, prompts, and themes in this monorepo are not enabled by this install.
+
+```bash
+pi install git:github.com/kmasa/pi-packages
+pi update git:github.com/kmasa/pi-packages
+```
+
+Run `/reload` after installing or updating. `/fast` or F3 toggles the persistent
+`fast on` / `fast off` footer status. Use `pi --fast` to start enabled in a new session.
+Remove any previous `npm:pi-fast` or local fast-mode declaration to avoid duplicate hooks.
+
+Git installs use Pi's TypeScript loader and the published statusline-protocol runtime
+package; no monorepo build is required. Root dependency versions use npm-compatible
+specifiers because Pi installs Git dependencies with npm by default, which cannot
+parse pnpm's `catalog:` specifiers. Workspace packages keep their existing catalogs.
+The Nx generators do not provide a root-only manifest for existing nested resources,
+so this Git-install adapter is maintained in the root `package.json`.
+
 ## Packages
 
 | Workspace                              | npm package                                         | Description                                                                         | Install                                                            |

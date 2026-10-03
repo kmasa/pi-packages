@@ -19,28 +19,25 @@ The current model's API and ID determine what gets injected. Any provider that s
 ## kmasa fork
 
 This fork adds `gpt-6.1-sol` support for OpenAI Responses and OAuth-backed Codex Responses.
-Only the fast-mode package is installed locally; the other monorepo extensions are not loaded.
+The repository root exposes only fast-mode; the other monorepo resources are not loaded.
 
 ```bash
-cd C:/Work/devgit/pi-packages
-pnpm install --frozen-lockfile
-pnpm nx build @aliaksei-raketski/pi-statusline-protocol
-pi install C:/Work/devgit/pi-packages/packages/fast-mode
+pi install git:github.com/kmasa/pi-packages
 ```
 
 Remove `npm:pi-fast` before using this package to avoid duplicate `/fast` commands and request hooks.
 Restart Pi or run `/reload` after installation. Use `/fast` or F3 to toggle; start with `pi --fast` to enable it in a new session.
 
-To update this local installation after changes are pushed to the fork:
+To update after changes are pushed to the fork:
 
 ```bash
-cd C:/Work/devgit/pi-packages
-git pull --ff-only origin main
-pnpm install --frozen-lockfile
-pnpm nx build @aliaksei-raketski/pi-statusline-protocol
+pi update git:github.com/kmasa/pi-packages
+# or update all installed packages
+pi update --extensions
 ```
 
-Then run `/reload` in Pi. `pi update --extensions` does not pull local-path packages.
+Then run `/reload` in Pi. No local workspace install or build is required.
+If migrating from a local-path installation, remove that package declaration to avoid loading fast-mode twice.
 
 ## Install (upstream npm package)
 
