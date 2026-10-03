@@ -11,12 +11,38 @@ The current model's API and ID determine what gets injected. Any provider that s
 - **Claude Opus 4.6 / 4.8 / 5 / 5.5** (`anthropic-messages`)
   - Adds `speed: "fast"`
   - Adds required header `anthropic-beta: fast-mode-2026-02-01`
-- **GPT-5.4 / GPT-5.5 / GPT-5.6 Luna, Sol, and Terra / GPT-6 Astra, Sol, and Luna**
+- **GPT-5.4 / GPT-5.5 / GPT-5.6 Luna, Sol, and Terra / GPT-6 Astra, Sol, and Luna / GPT-6.1 Sol**
   - Adds `service_tier: "priority"`
   - `openai-codex-responses` requires ChatGPT/OAuth auth (API-key models are skipped)
   - `openai-responses` works with API-key auth
 
-## Install
+## kmasa fork
+
+This fork adds `gpt-6.1-sol` support for OpenAI Responses and OAuth-backed Codex Responses.
+Only the fast-mode package is installed locally; the other monorepo extensions are not loaded.
+
+```bash
+cd C:/Work/devgit/pi-packages
+pnpm install --frozen-lockfile
+pnpm nx build @aliaksei-raketski/pi-statusline-protocol
+pi install C:/Work/devgit/pi-packages/packages/fast-mode
+```
+
+Remove `npm:pi-fast` before using this package to avoid duplicate `/fast` commands and request hooks.
+Restart Pi or run `/reload` after installation. Use `/fast` or F3 to toggle; start with `pi --fast` to enable it in a new session.
+
+To update this local installation after changes are pushed to the fork:
+
+```bash
+cd C:/Work/devgit/pi-packages
+git pull --ff-only origin main
+pnpm install --frozen-lockfile
+pnpm nx build @aliaksei-raketski/pi-statusline-protocol
+```
+
+Then run `/reload` in Pi. `pi update --extensions` does not pull local-path packages.
+
+## Install (upstream npm package)
 
 ```bash
 pi install npm:@aliaksei-raketski/pi-fast-mode

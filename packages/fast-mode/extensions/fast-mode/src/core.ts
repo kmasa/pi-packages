@@ -35,11 +35,12 @@ const OPENAI_FAST_MODELS = new Set([
   'gpt-6-astra',
   'gpt-6-sol',
   'gpt-6-luna',
+  'gpt-6.1-sol',
 ]);
 const CLAUDE_UNSUPPORTED_MESSAGE =
   'Fast mode is only available for Claude Opus 4.6, 4.8, 5, and 5.5';
 const OPENAI_UNSUPPORTED_MESSAGE =
-  'Fast mode is only available for GPT-5.4, GPT-5.5, GPT-5.6 Luna/Sol/Terra, and GPT-6 Astra/Sol/Luna';
+  'Fast mode is only available for GPT-5.4, GPT-5.5, GPT-5.6 Luna/Sol/Terra, GPT-6 Astra/Sol/Luna, and GPT-6.1 Sol';
 
 export type FastModel = {
   provider: string;

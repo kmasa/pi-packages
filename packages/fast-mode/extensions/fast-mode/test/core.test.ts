@@ -261,7 +261,7 @@ test('LiteLLM Claude model without upstream fast mode stays unsupported', () => 
   expect(headers).toEqual({});
 });
 
-test.each(['gpt-6-astra', 'gpt-6-sol', 'gpt-6-luna'])(
+test.each(['gpt-6-astra', 'gpt-6-sol', 'gpt-6-luna', 'gpt-6.1-sol'])(
   'OpenAI Codex fast mode supports %s with OAuth',
   (modelId) => {
     const ctx = context(
@@ -278,7 +278,7 @@ test.each(['gpt-6-astra', 'gpt-6-sol', 'gpt-6-luna'])(
   },
 );
 
-test.each(['openai/gpt-6-luna', 'openai/gpt-5.6-terra'])(
+test.each(['openai/gpt-6-luna', 'openai/gpt-5.6-terra', 'openai/gpt-6.1-sol'])(
   'OpenAI Responses fast mode supports API-key LiteLLM model %s',
   (modelId) => {
     const ctx = context(
@@ -294,6 +294,45 @@ test.each(['openai/gpt-6-luna', 'openai/gpt-5.6-terra'])(
     });
   },
 );
+
+test.each([
+  ['openai', 'openai-responses', false],
+  ['openai-codex', 'openai-codex-responses', true],
+])('GPT-6.1 Sol displays on/off and only injects priority when on (%s)', (provider, api, oauth) => {
+  const ctx = context({ provider, api, id: 'gpt-6.1-sol' }, oauth);
+  const state = createFastModeState(false);
+  const modelStatus = getCurrentModelStatus(ctx);
+  const payload = { model: 'gpt-6.1-sol', input: [] };
+
+  expect(modelStatus.isSupported).toBe(true);
+  expect(getStatusView(state, modelStatus).text).toBe('fast off');
+  expect(getFastPayload(payload, ctx, state, modelStatus)).toBeUndefined();
+
+  state.enabled = true;
+  expect(getStatusView(state, modelStatus).text).toBe('fast on');
+  expect(getFastPayload(payload, ctx, state, modelStatus)).toEqual({
+    ...payload,
+    service_tier: 'priority',
+  });
+  expect(payload).not.toHaveProperty('service_tier');
+  expect(
+    getFastPayload({ ...payload, service_tier: 'default' }, ctx, state, modelStatus),
+  ).toBeUndefined();
+});
+
+test('GPT-6.1 Sol Codex still requires OAuth', () => {
+  const ctx = context({
+    provider: 'openai-codex',
+    api: 'openai-codex-responses',
+    id: 'gpt-6.1-sol',
+  });
+  const state = createFastModeState(true);
+  const modelStatus = getCurrentModelStatus(ctx);
+
+  expect(modelStatus.isSupported).toBe(false);
+  expect(getStatusView(state, modelStatus).text).toBe('no fast');
+  expect(getFastPayload({ model: 'gpt-6.1-sol' }, ctx, state, modelStatus)).toBeUndefined();
+});
 
 test('Claude Opus 4.7 stays unsupported because the API rejects fast mode', () => {
   const ctx = context({ provider: 'anthropic', api: 'anthropic-messages', id: 'claude-opus-4-7' });
